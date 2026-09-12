@@ -11,10 +11,10 @@ function monthToISO(s: string): string {
   }
   return s;
 }
+
 import {
   AreaChart,
   Area,
-  LineChart,
   Line,
   BarChart,
   Bar,
@@ -30,8 +30,6 @@ import {
 } from 'recharts';
 import {
   TrendingUp,
-  TrendingDown,
-  Minus,
   Star,
   ThumbsUp,
   Clock,
@@ -43,7 +41,6 @@ import {
   Info,
   ChevronDown,
   ChevronUp,
-  Lightbulb,
   ShieldAlert,
   Zap,
   ArrowUpRight,
@@ -61,34 +58,34 @@ import {
 
 // ── Colour palette ────────────────────────────────────────────────────────────
 const C = {
-  csat:         '#6366f1',  // indigo
-  nps:          '#22d3ee',  // cyan
-  response:     '#f59e0b',  // amber
-  tickets:      '#a78bfa',  // violet
-  churn:        '#f87171',  // red-400
-  severity:     '#fb923c',  // orange
-  forecast:     '#6366f1',
-  band:         '#6366f1',
+  csat:         '#4f46e5',  // indigo-600
+  nps:          '#0284c7',  // sky-600
+  response:     '#d97706',  // amber-600
+  tickets:      '#7c3aed',  // violet-600
+  churn:        '#dc2626',  // red-600
+  severity:     '#ea580c',  // orange-600
+  forecast:     '#4f46e5',
+  band:         '#4f46e5',
 } as const;
 
 const SEV_STYLES: Record<string, { bg: string; border: string; text: string; icon: React.ReactNode }> = {
   critical: {
     bg: 'bg-red-500/10',
-    border: 'border-red-500/40',
-    text: 'text-red-400',
-    icon: <AlertCircle size={14} className="text-red-400 shrink-0" />,
+    border: 'border-red-200',
+    text: 'text-red-700',
+    icon: <AlertCircle size={14} className="text-red-600 shrink-0" />,
   },
   warning: {
     bg: 'bg-amber-500/10',
-    border: 'border-amber-500/40',
-    text: 'text-amber-400',
-    icon: <AlertTriangle size={14} className="text-amber-400 shrink-0" />,
+    border: 'border-amber-200',
+    text: 'text-amber-700',
+    icon: <AlertTriangle size={14} className="text-amber-600 shrink-0" />,
   },
   low: {
     bg: 'bg-indigo-500/10',
-    border: 'border-indigo-500/40',
-    text: 'text-indigo-400',
-    icon: <Info size={14} className="text-indigo-400 shrink-0" />,
+    border: 'border-indigo-200',
+    text: 'text-indigo-700',
+    icon: <Info size={14} className="text-indigo-600 shrink-0" />,
   },
 };
 
@@ -123,30 +120,30 @@ function KpiCard({ label, value, subLabel, mom, yoy, invertGood = false, icon, a
   const yoyGood = invertGood ? yoy <= 0 : yoy >= 0;
 
   const Badge = ({ val, good, prefix }: { val: number; good: boolean; prefix: string }) => (
-    <span className={`inline-flex items-center gap-0.5 text-xs font-medium ${good ? 'text-emerald-400' : 'text-red-400'}`}>
+    <span className={`inline-flex items-center gap-0.5 text-xs font-medium ${good ? 'text-emerald-600' : 'text-red-600'}`}>
       {good ? <ArrowUpRight size={11} /> : <ArrowDownRight size={11} />}
       {prefix} {Math.abs(val).toFixed(1)}%
     </span>
   );
 
   return (
-    <div className="relative bg-gray-800/60 border border-gray-700/50 rounded-xl p-5 overflow-hidden group hover:border-gray-600/60 transition-all">
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-           style={{ background: `radial-gradient(circle at 70% 30%, ${accent}12 0%, transparent 70%)` }} />
+    <div className="relative bg-bg-surface border border-bg-border rounded-card p-5 overflow-hidden group hover:border-text-secondary/30 transition-all shadow-sm">
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+           style={{ background: `radial-gradient(circle at 70% 30%, ${accent}0D 0%, transparent 70%)` }} />
       <div className="relative">
         <div className="flex items-start justify-between mb-3">
-          <div className="p-2 rounded-lg" style={{ backgroundColor: `${accent}20` }}>
+          <div className="p-2 rounded-lg" style={{ backgroundColor: `${accent}15` }}>
             <div style={{ color: accent }}>{icon}</div>
           </div>
           {target && (
-            <span className={`text-xs px-2 py-0.5 rounded-full border ${targetMet ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' : 'text-amber-400 border-amber-500/30 bg-amber-500/10'}`}>
+            <span className={`text-xs px-2 py-0.5 rounded-full border ${targetMet ? 'text-emerald-700 border-emerald-300 bg-emerald-50' : 'text-amber-700 border-amber-300 bg-amber-50'}`}>
               Target: {target}
             </span>
           )}
         </div>
-        <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{label}</p>
-        <p className="text-2xl font-bold text-white mb-0.5">{value}</p>
-        {subLabel && <p className="text-xs text-gray-500 mb-2">{subLabel}</p>}
+        <p className="text-xs text-text-secondary uppercase tracking-wider font-semibold mb-1">{label}</p>
+        <p className="text-2xl font-bold text-text-primary mb-0.5">{value}</p>
+        {subLabel && <p className="text-xs text-text-muted mb-2">{subLabel}</p>}
         <div className="flex items-center gap-3 mt-2">
           <Badge val={mom} good={momGood} prefix="MoM" />
           <Badge val={yoy} good={yoyGood} prefix="YoY" />
@@ -163,13 +160,13 @@ function SectionHeader({ title, subtitle, icon }: { title: string; subtitle?: st
   return (
     <div className="flex items-start gap-3 mb-4">
       {icon && (
-        <div className="p-2 bg-indigo-500/10 border border-indigo-500/20 rounded-lg mt-0.5">
-          <div className="text-indigo-400">{icon}</div>
+        <div className="p-2 bg-indigo-50 border border-indigo-100 rounded-lg mt-0.5">
+          <div className="text-indigo-600">{icon}</div>
         </div>
       )}
       <div>
-        <h2 className="text-base font-semibold text-white">{title}</h2>
-        {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
+        <h2 className="text-base font-semibold text-text-primary">{title}</h2>
+        {subtitle && <p className="text-xs text-text-secondary mt-0.5">{subtitle}</p>}
       </div>
     </div>
   );
@@ -182,34 +179,34 @@ function AnomalyRow({ ev }: { ev: CxAnomalyEvent }) {
   const [open, setOpen] = useState(false);
   const s = SEV_STYLES[ev.severity];
   return (
-    <div className={`rounded-lg border ${s.bg} ${s.border} overflow-hidden transition-all`}>
+    <div className={`rounded-lg border ${s.bg} ${s.border} overflow-hidden transition-all shadow-sm`}>
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/5 transition-colors"
+        className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-black/5 transition-colors"
       >
         {s.icon}
-        <span className={`text-xs font-semibold uppercase tracking-wider w-14 shrink-0 ${s.text}`}>
+        <span className={`text-xs font-bold uppercase tracking-wider w-14 shrink-0 ${s.text}`}>
           {ev.severity}
         </span>
-        <span className="text-xs text-gray-300 w-20 shrink-0">{ev.date}</span>
-        <span className="text-xs text-indigo-300 w-36 shrink-0 truncate">{ev.kpi}</span>
-        <span className="text-xs font-medium text-white w-20 shrink-0">{ev.value}</span>
-        <span className={`text-xs font-medium shrink-0 ${ev.deviation.startsWith('+') ? 'text-red-400' : 'text-emerald-400'}`}>
+        <span className="text-xs text-text-secondary w-20 shrink-0">{ev.date}</span>
+        <span className="text-xs text-indigo-900 font-medium w-36 shrink-0 truncate">{ev.kpi}</span>
+        <span className="text-xs font-semibold text-text-primary w-20 shrink-0">{ev.value}</span>
+        <span className={`text-xs font-medium shrink-0 ${ev.deviation.startsWith('+') ? 'text-red-600' : 'text-emerald-600'}`}>
           {ev.deviation}
         </span>
-        <span className="ml-auto text-gray-500">
+        <span className="ml-auto text-text-muted">
           {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </span>
       </button>
       {open && (
-        <div className="px-4 pb-4 space-y-2 border-t border-white/5 pt-3">
+        <div className="px-4 pb-4 space-y-2 border-t border-black/5 pt-3 bg-white/50">
           <div>
-            <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Impact</p>
-            <p className="text-xs text-gray-300 leading-relaxed">{ev.impact}</p>
+            <p className="text-xs text-text-secondary uppercase tracking-wider font-semibold mb-1">Impact</p>
+            <p className="text-xs text-text-primary leading-relaxed">{ev.impact}</p>
           </div>
           <div>
-            <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Recommendation</p>
-            <p className="text-xs text-cyan-300 leading-relaxed">{ev.recommendation}</p>
+            <p className="text-xs text-text-secondary uppercase tracking-wider font-semibold mb-1">Recommendation</p>
+            <p className="text-xs text-sky-800 leading-relaxed font-medium">{ev.recommendation}</p>
           </div>
         </div>
       )}
@@ -260,27 +257,27 @@ const AI_RECOMMENDATIONS = [
 ];
 
 const REC_STYLES = {
-  critical: { border: 'border-red-500/30', bg: 'bg-red-500/8', accent: 'text-red-400', badge: 'bg-red-500/20 text-red-400 border-red-500/30', icon: <ShieldAlert size={16} /> },
-  watch:    { border: 'border-amber-500/30', bg: 'bg-amber-500/8', accent: 'text-amber-400', badge: 'bg-amber-500/20 text-amber-400 border-amber-500/30', icon: <AlertTriangle size={16} /> },
-  positive: { border: 'border-emerald-500/30', bg: 'bg-emerald-500/8', accent: 'text-emerald-400', badge: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', icon: <TrendingUp size={16} /> },
-  action:   { border: 'border-indigo-500/30', bg: 'bg-indigo-500/8', accent: 'text-indigo-400', badge: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30', icon: <Zap size={16} /> },
+  critical: { border: 'border-red-200', bg: 'bg-red-50/60', accent: 'text-red-600', badge: 'bg-red-100 text-red-700 border-red-200', icon: <ShieldAlert size={16} /> },
+  watch:    { border: 'border-amber-200', bg: 'bg-amber-50/60', accent: 'text-amber-600', badge: 'bg-amber-100 text-amber-700 border-amber-200', icon: <AlertTriangle size={16} /> },
+  positive: { border: 'border-emerald-200', bg: 'bg-emerald-50/60', accent: 'text-emerald-600', badge: 'bg-emerald-100 text-emerald-700 border-emerald-200', icon: <TrendingUp size={16} /> },
+  action:   { border: 'border-indigo-200', bg: 'bg-indigo-50/60', accent: 'text-indigo-600', badge: 'bg-indigo-100 text-indigo-700 border-indigo-200', icon: <Zap size={16} /> },
 };
 
 function RecommendationCard({ rec }: { rec: typeof AI_RECOMMENDATIONS[0] }) {
   const s = REC_STYLES[rec.type];
   return (
-    <div className={`rounded-xl border ${s.border} ${s.bg} p-4 space-y-2`}>
+    <div className={`rounded-card border ${s.border} ${s.bg} p-4 space-y-2 shadow-sm`}>
       <div className="flex items-center gap-2">
         <span className={`${s.accent}`}>{s.icon}</span>
         <span className={`text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border ${s.badge}`}>
           {rec.type}
         </span>
       </div>
-      <p className="text-sm font-medium text-white">{rec.title}</p>
-      <p className="text-xs text-gray-400 leading-relaxed">{rec.body}</p>
-      <div className="bg-black/20 rounded-lg px-3 py-2 border border-white/5">
-        <p className="text-xs text-cyan-300 leading-relaxed">
-          <span className="font-semibold text-cyan-400">Action: </span>{rec.action}
+      <p className="text-sm font-semibold text-text-primary">{rec.title}</p>
+      <p className="text-xs text-text-secondary leading-relaxed">{rec.body}</p>
+      <div className="bg-bg-surface/80 rounded-lg px-3 py-2 border border-bg-border shadow-xs">
+        <p className="text-xs text-sky-900 leading-relaxed font-medium">
+          <span className="font-bold text-sky-950">Action: </span>{rec.action}
         </p>
       </div>
     </div>
@@ -293,12 +290,12 @@ function RecommendationCard({ rec }: { rec: typeof AI_RECOMMENDATIONS[0] }) {
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-gray-900/95 border border-gray-700/60 rounded-lg p-3 text-xs shadow-xl">
-      <p className="font-semibold text-gray-200 mb-2">{label}</p>
+    <div className="bg-bg-surface border border-bg-border rounded-lg p-3 text-xs shadow-md">
+      <p className="font-bold text-text-primary mb-2">{label}</p>
       {payload.map(p => (
         <div key={p.name} className="flex items-center justify-between gap-4">
-          <span style={{ color: p.color }} className="capitalize">{p.name}</span>
-          <span className="font-medium text-white">{typeof p.value === 'number' ? p.value.toFixed(2) : p.value}</span>
+          <span style={{ color: p.color }} className="capitalize font-medium">{p.name}</span>
+          <span className="font-bold text-text-primary">{typeof p.value === 'number' ? p.value.toFixed(2) : p.value}</span>
         </div>
       ))}
     </div>
@@ -361,41 +358,37 @@ export default function CustomerExperienceDashboardPage() {
   const forecastLabel = { csat: 'CSAT Score', nps: 'NPS Score', response: 'Response Time (min)' }[forecastKey];
   const forecastColor = { csat: C.csat, nps: C.nps, response: C.response }[forecastKey];
 
-  // ── Anomaly activity bar colours ──────────────────────────────────────────
-  const anomalyBarColor = (count: number) =>
-    count === 0 ? '#374151' : count <= 4 ? '#6366f1' : count <= 7 ? '#f59e0b' : '#f87171';
-
   // ── Churn bar colour ──────────────────────────────────────────────────────
   const churnBarColor = (rate: number) =>
-    rate < 3 ? '#22d3ee' : rate < 5 ? '#f59e0b' : '#f87171';
+    rate < 3 ? '#0284c7' : rate < 5 ? '#d97706' : '#dc2626';
 
   // ── Ticket bar colour ─────────────────────────────────────────────────────
   const ticketBarColor = (v: number) =>
-    v < 500 ? '#6366f1' : v < 800 ? '#f59e0b' : '#f87171';
+    v < 500 ? '#4f46e5' : v < 800 ? '#d97706' : '#dc2626';
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white p-6 space-y-8">
+    <div className="min-h-screen bg-bg-base text-text-primary p-6 space-y-8">
       {/* ── Page Header ─────────────────────────────────────────────────── */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-cyan-500/10 border border-cyan-500/20 rounded-xl">
-            <Star size={20} className="text-cyan-400" />
+          <div className="p-2.5 bg-sky-50 border border-sky-200 rounded-xl">
+            <Star size={20} className="text-sky-600" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">Customer Experience Dashboard</h1>
-            <p className="text-xs text-gray-400">Jan 2025 – Sep 2027 &bull; 33 months &bull; Last updated: {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+            <h1 className="text-xl font-bold text-text-primary">Customer Experience Dashboard</h1>
+            <p className="text-xs text-text-secondary">Jan 2025 – Sep 2027 &bull; 33 months &bull; Last updated: {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
           </div>
         </div>
         {/* Summary strip */}
         <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: 'Total Anomalies', value: String(CX_SUMMARY.totalAnomalies), color: 'text-red-400' },
-            { label: 'Avg Anomaly Rate', value: CX_SUMMARY.avgAnomalyRate, color: 'text-amber-400' },
-            { label: 'Trend Anomalies', value: String(CX_SUMMARY.trendAnomalies), color: 'text-violet-400' },
-            { label: 'High-Severity Months', value: String(CX_SUMMARY.highSeverityMonths), color: 'text-red-400' },
+            { label: 'Total Anomalies', value: String(CX_SUMMARY.totalAnomalies), color: 'text-red-600' },
+            { label: 'Avg Anomaly Rate', value: CX_SUMMARY.avgAnomalyRate, color: 'text-amber-600' },
+            { label: 'Trend Anomalies', value: String(CX_SUMMARY.trendAnomalies), color: 'text-violet-600' },
+            { label: 'High-Severity Months', value: String(CX_SUMMARY.highSeverityMonths), color: 'text-red-600' },
           ].map(item => (
-            <div key={item.label} className="bg-gray-800/50 border border-gray-700/40 rounded-lg px-4 py-2.5">
-              <p className="text-xs text-gray-400">{item.label}</p>
+            <div key={item.label} className="bg-bg-surface border border-bg-border rounded-card px-4 py-2.5 shadow-sm">
+              <p className="text-xs font-semibold text-text-secondary">{item.label}</p>
               <p className={`text-lg font-bold ${item.color}`}>{item.value}</p>
             </div>
           ))}
@@ -467,18 +460,18 @@ export default function CustomerExperienceDashboardPage() {
           subtitle="Customer satisfaction and net promoter score — 33 months"
           icon={<Star size={16} />}
         />
-        <div className="bg-gray-800/60 border border-gray-700/50 rounded-xl p-5">
+        <div className="bg-bg-surface border border-bg-border rounded-card p-5 shadow-sm">
           <ResponsiveContainer width="100%" height={280}>
             <ComposedChart data={filteredMonthly} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.5} />
-              <XAxis dataKey="month" tick={{ fill: '#9ca3af', fontSize: 10 }} tickFormatter={shortMonth} interval={2} />
-              <YAxis yAxisId="csat" domain={[3.6, 4.1]} tick={{ fill: '#9ca3af', fontSize: 10 }} width={40}
-                label={{ value: 'CSAT', angle: -90, position: 'insideLeft', fill: '#6b7280', fontSize: 10, dx: -4 }} />
-              <YAxis yAxisId="nps" orientation="right" domain={[50, 70]} tick={{ fill: '#9ca3af', fontSize: 10 }} width={36}
-                label={{ value: 'NPS', angle: 90, position: 'insideRight', fill: '#6b7280', fontSize: 10, dx: 4 }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 10 }} tickFormatter={shortMonth} interval={2} />
+              <YAxis yAxisId="csat" domain={[3.6, 4.1]} tick={{ fill: '#64748b', fontSize: 10 }} width={40}
+                label={{ value: 'CSAT', angle: -90, position: 'insideLeft', fill: '#64748b', fontSize: 10, dx: -4 }} />
+              <YAxis yAxisId="nps" orientation="right" domain={[50, 70]} tick={{ fill: '#64748b', fontSize: 10 }} width={36}
+                label={{ value: 'NPS', angle: 90, position: 'insideRight', fill: '#64748b', fontSize: 10, dx: 4 }} />
               <Tooltip content={<ChartTooltip />} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <ReferenceLine yAxisId="csat" y={3.8} stroke="#6366f1" strokeDasharray="4 3" strokeOpacity={0.4} />
+              <ReferenceLine yAxisId="csat" y={3.8} stroke="#4f46e5" strokeDasharray="4 3" strokeOpacity={0.4} />
               <Area yAxisId="csat" type="monotone" dataKey="csat" name="CSAT" stroke={C.csat} fill={`${C.csat}20`} strokeWidth={2} dot={false} />
               <Line yAxisId="nps" type="monotone" dataKey="nps" name="NPS" stroke={C.nps} strokeWidth={2} dot={false} />
             </ComposedChart>
@@ -491,14 +484,14 @@ export default function CustomerExperienceDashboardPage() {
         {/* Response Time */}
         <div>
           <SectionHeader title="Avg Response Time" subtitle="Minutes — 50 min alert threshold" icon={<Clock size={16} />} />
-          <div className="bg-gray-800/60 border border-gray-700/50 rounded-xl p-5">
+          <div className="bg-bg-surface border border-bg-border rounded-card p-5 shadow-sm">
             <ResponsiveContainer width="100%" height={240}>
               <AreaChart data={filteredMonthly} margin={{ top: 5, right: 16, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.5} />
-                <XAxis dataKey="month" tick={{ fill: '#9ca3af', fontSize: 10 }} tickFormatter={shortMonth} interval={3} />
-                <YAxis domain={[30, 75]} tick={{ fill: '#9ca3af', fontSize: 10 }} width={36} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 10 }} tickFormatter={shortMonth} interval={3} />
+                <YAxis domain={[30, 75]} tick={{ fill: '#64748b', fontSize: 10 }} width={36} />
                 <Tooltip content={<ChartTooltip />} />
-                <ReferenceLine y={50} stroke="#f87171" strokeDasharray="4 3" label={{ value: '50 min threshold', fill: '#f87171', fontSize: 9, position: 'insideTopRight' }} />
+                <ReferenceLine y={50} stroke="#dc2626" strokeDasharray="4 3" label={{ value: '50 min threshold', fill: '#dc2626', fontSize: 9, position: 'insideTopRight' }} />
                 <Area type="monotone" dataKey="responseTime" name="Response Time (min)" stroke={C.response} fill={`${C.response}20`} strokeWidth={2} dot={false} />
               </AreaChart>
             </ResponsiveContainer>
@@ -508,14 +501,14 @@ export default function CustomerExperienceDashboardPage() {
         {/* Support Tickets */}
         <div>
           <SectionHeader title="Monthly Support Tickets" subtitle="Volume by month — 800+ alert threshold" icon={<Ticket size={16} />} />
-          <div className="bg-gray-800/60 border border-gray-700/50 rounded-xl p-5">
+          <div className="bg-bg-surface border border-bg-border rounded-card p-5 shadow-sm">
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={filteredMonthly} margin={{ top: 5, right: 16, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.5} />
-                <XAxis dataKey="month" tick={{ fill: '#9ca3af', fontSize: 10 }} tickFormatter={shortMonth} interval={3} />
-                <YAxis domain={[0, 1100]} tick={{ fill: '#9ca3af', fontSize: 10 }} width={40} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 10 }} tickFormatter={shortMonth} interval={3} />
+                <YAxis domain={[0, 1100]} tick={{ fill: '#64748b', fontSize: 10 }} width={40} />
                 <Tooltip content={<ChartTooltip />} />
-                <ReferenceLine y={800} stroke="#f87171" strokeDasharray="4 3" label={{ value: '800 alert', fill: '#f87171', fontSize: 9, position: 'insideTopRight' }} />
+                <ReferenceLine y={800} stroke="#dc2626" strokeDasharray="4 3" label={{ value: '800 alert', fill: '#dc2626', fontSize: 9, position: 'insideTopRight' }} />
                 <Bar dataKey="supportTickets" name="Support Tickets" radius={[3, 3, 0, 0]}>
                   {filteredMonthly.map((entry, i) => (
                     <Cell key={i} fill={ticketBarColor(entry.supportTickets)} />
@@ -532,28 +525,28 @@ export default function CustomerExperienceDashboardPage() {
         {/* Churn Rate */}
         <div>
           <SectionHeader title="Monthly Churn Rate" subtitle="% — below 3% healthy, 5%+ critical" icon={<UserX size={16} />} />
-          <div className="bg-gray-800/60 border border-gray-700/50 rounded-xl p-5">
+          <div className="bg-bg-surface border border-bg-border rounded-card p-5 shadow-sm">
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={filteredMonthly} margin={{ top: 5, right: 16, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.5} />
-                <XAxis dataKey="month" tick={{ fill: '#9ca3af', fontSize: 10 }} tickFormatter={shortMonth} interval={3} />
-                <YAxis domain={[0, 0.10]} tickFormatter={v => `${(v * 100).toFixed(0)}%`} tick={{ fill: '#9ca3af', fontSize: 10 }} width={40} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 10 }} tickFormatter={shortMonth} interval={3} />
+                <YAxis domain={[0, 0.10]} tickFormatter={v => `${(v * 100).toFixed(0)}%`} tick={{ fill: '#64748b', fontSize: 10 }} width={40} />
                 <Tooltip
                   content={({ active, payload, label }) => {
                     if (!active || !payload?.length) return null;
                     return (
-                      <div className="bg-gray-900/95 border border-gray-700/60 rounded-lg p-3 text-xs shadow-xl">
-                        <p className="font-semibold text-gray-200 mb-2">{label}</p>
+                      <div className="bg-bg-surface border border-bg-border rounded-lg p-3 text-xs shadow-md">
+                        <p className="font-bold text-text-primary mb-2">{label}</p>
                         <div className="flex items-center justify-between gap-4">
-                          <span className="text-red-400">Churn Rate</span>
-                          <span className="font-medium text-white">{((payload[0].value as number) * 100).toFixed(1)}%</span>
+                          <span className="text-red-600 font-medium">Churn Rate</span>
+                          <span className="font-bold text-text-primary">{((payload[0].value as number) * 100).toFixed(1)}%</span>
                         </div>
                       </div>
                     );
                   }}
                 />
-                <ReferenceLine y={0.05} stroke="#f87171" strokeDasharray="4 3" label={{ value: '5% critical', fill: '#f87171', fontSize: 9, position: 'insideTopRight' }} />
-                <ReferenceLine y={0.03} stroke="#f59e0b" strokeDasharray="4 3" label={{ value: '3% warning', fill: '#f59e0b', fontSize: 9, position: 'insideTopLeft' }} />
+                <ReferenceLine y={0.05} stroke="#dc2626" strokeDasharray="4 3" label={{ value: '5% critical', fill: '#dc2626', fontSize: 9, position: 'insideTopRight' }} />
+                <ReferenceLine y={0.03} stroke="#d97706" strokeDasharray="4 3" label={{ value: '3% warning', fill: '#d97706', fontSize: 9, position: 'insideTopLeft' }} />
                 <Bar dataKey="churnRate" name="Churn Rate" radius={[3, 3, 0, 0]}>
                   {filteredMonthly.map((entry, i) => (
                     <Cell key={i} fill={churnBarColor(entry.churnRate * 100)} />
@@ -563,7 +556,6 @@ export default function CustomerExperienceDashboardPage() {
             </ResponsiveContainer>
           </div>
         </div>
-
       </div>
 
       {/* ── Prophet Forecast ────────────────────────────────────────────── */}
@@ -573,29 +565,29 @@ export default function CustomerExperienceDashboardPage() {
           subtitle="6-month forward forecast with 95% confidence interval"
           icon={<TrendingUp size={16} />}
         />
-        <div className="bg-gray-800/60 border border-gray-700/50 rounded-xl p-5">
+        <div className="bg-bg-surface border border-bg-border rounded-card p-5 shadow-sm">
           {/* Toggle */}
           <div className="flex items-center gap-2 mb-5 flex-wrap">
             {(['csat', 'nps', 'response'] as ForecastKey[]).map(k => (
               <button
                 key={k}
                 onClick={() => setForecastKey(k)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
                   forecastKey === k
-                    ? 'bg-indigo-500/20 border-indigo-500/40 text-indigo-300'
-                    : 'bg-gray-700/50 border-gray-600/40 text-gray-400 hover:text-gray-200'
+                    ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                    : 'bg-bg-base border-bg-border text-text-secondary hover:text-text-primary'
                 }`}
               >
                 {k === 'csat' ? 'CSAT Score' : k === 'nps' ? 'NPS Score' : 'Response Time'}
               </button>
             ))}
-            <span className="ml-auto text-xs text-gray-500">Shaded = 95% confidence interval &bull; Dashed = forecast</span>
+            <span className="ml-auto text-xs text-text-muted">Shaded = 95% confidence interval &bull; Dashed = forecast</span>
           </div>
           <ResponsiveContainer width="100%" height={280}>
             <ComposedChart data={forecastData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.5} />
-              <XAxis dataKey="month" tick={{ fill: '#9ca3af', fontSize: 10 }} tickFormatter={shortMonth} interval={1} />
-              <YAxis tick={{ fill: '#9ca3af', fontSize: 10 }} width={45}
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 10 }} tickFormatter={shortMonth} interval={1} />
+              <YAxis tick={{ fill: '#64748b', fontSize: 10 }} width={45}
                 domain={[
                   forecastKey === 'csat' ? 3.6 : forecastKey === 'nps' ? 50 : 30,
                   forecastKey === 'csat' ? 4.1 : forecastKey === 'nps' ? 70 : 68,
@@ -603,14 +595,28 @@ export default function CustomerExperienceDashboardPage() {
               <Tooltip content={<ChartTooltip />} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
               {/* confidence band */}
-              <Area type="monotone" dataKey="upper" name="Upper 95%" stroke="none" fill={`${forecastColor}18`} />
-              <Area type="monotone" dataKey="lower" name="Lower 95%" stroke="none" fill="#09090b" />
+              <Area type="monotone" dataKey="upper" name="Upper 95%" stroke="none" fill={`${forecastColor}20`} />
+              <Area type="monotone" dataKey="lower" name="Lower 95%" stroke="none" fill="#ffffff" />
               {/* forecast line */}
               <Line type="monotone" dataKey="forecast" name={`Forecast ${forecastLabel}`} stroke={forecastColor} strokeWidth={2} strokeDasharray="5 3" dot={false} />
               {/* actual */}
-              <Line type="monotone" dataKey="actual" name={`Actual ${forecastLabel}`} stroke="#34d399" strokeWidth={2} dot={{ r: 3, fill: '#34d399' }} connectNulls={false} />
+              <Line type="monotone" dataKey="actual" name={`Actual ${forecastLabel}`} stroke="#059669" strokeWidth={2} dot={{ r: 3, fill: '#059669' }} connectNulls={false} />
             </ComposedChart>
           </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* ── AI Recommendations Grid ──────────────────────────────────────── */}
+      <div>
+        <SectionHeader
+          title="AI Recommendations & Strategic Insights"
+          subtitle="Automated analysis driven by anomaly and forecast signals"
+          icon={<Zap size={16} />}
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {AI_RECOMMENDATIONS.map((rec, idx) => (
+            <RecommendationCard key={idx} rec={rec} />
+          ))}
         </div>
       </div>
 
@@ -625,16 +631,14 @@ export default function CustomerExperienceDashboardPage() {
         <div className="flex items-center gap-2 mb-3 flex-wrap">
           {(['all', 'critical', 'warning', 'low'] as SevFilter[]).map(f => {
             const counts = { all: CX_ANOMALY_EVENTS.length, critical: CX_ANOMALY_EVENTS.filter(e => e.severity === 'critical').length, warning: CX_ANOMALY_EVENTS.filter(e => e.severity === 'warning').length, low: CX_ANOMALY_EVENTS.filter(e => e.severity === 'low').length };
-            const colors = { all: 'indigo', critical: 'red', warning: 'amber', low: 'blue' };
-            const col = colors[f];
             return (
               <button
                 key={f}
                 onClick={() => setSevFilter(f)}
-                className={`px-3 py-1 rounded-lg text-xs font-medium border transition-all capitalize ${
+                className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-all capitalize ${
                   sevFilter === f
-                    ? `bg-${col}-500/20 border-${col}-500/40 text-${col}-300`
-                    : 'bg-gray-700/50 border-gray-600/40 text-gray-400 hover:text-gray-200'
+                    ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                    : 'bg-bg-surface border-bg-border text-text-secondary hover:text-text-primary'
                 }`}
               >
                 {f} ({counts[f]})
@@ -643,46 +647,18 @@ export default function CustomerExperienceDashboardPage() {
           })}
           <button
             onClick={() => setExpandAll(o => !o)}
-            className="ml-auto text-xs text-gray-400 hover:text-gray-200 border border-gray-600/40 rounded-lg px-3 py-1 bg-gray-700/50"
+            className="ml-auto text-xs font-medium text-text-secondary hover:text-text-primary border border-bg-border rounded-lg px-3 py-1 bg-bg-surface shadow-xs"
           >
             {expandAll ? 'Collapse All' : 'Expand All'}
           </button>
         </div>
-        {/* Header row */}
-        <div className="flex items-center gap-3 px-4 py-2 text-xs text-gray-500 uppercase tracking-wider">
-          <span className="w-4 shrink-0" />
-          <span className="w-14 shrink-0">Sev</span>
-          <span className="w-20 shrink-0">Date</span>
-          <span className="w-36 shrink-0">KPI</span>
-          <span className="w-20 shrink-0">Value</span>
-          <span>Deviation</span>
-        </div>
+
+        {/* Anomaly list */}
         <div className="space-y-2">
           {filteredAnomalies.map(ev => (
             <AnomalyRow key={ev.id} ev={ev} />
           ))}
         </div>
-      </div>
-
-      {/* ── AI Recommendations ───────────────────────────────────────────── */}
-      <div>
-        <SectionHeader
-          title="AI Recommendations"
-          subtitle="Automated insights derived from trend analysis, anomaly detection, and cross-metric correlations"
-          icon={<Lightbulb size={16} />}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {AI_RECOMMENDATIONS.map((rec, i) => (
-            <RecommendationCard key={i} rec={rec} />
-          ))}
-        </div>
-      </div>
-
-      {/* ── Footer ───────────────────────────────────────────────────────── */}
-      <div className="border-t border-gray-700/40 pt-4 text-center">
-        <p className="text-xs text-gray-500">
-          KPI Nexus &bull; Customer Experience Domain &bull; Data coverage: Jan 2025 – Sep 2027 &bull; Forecast horizon: Mar 2028
-        </p>
       </div>
     </div>
   );
